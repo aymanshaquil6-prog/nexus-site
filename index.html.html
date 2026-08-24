@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS | Comunidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0D1A;
+    --bg-panel: #12172B;
+    --bg-panel-2: #171D36;
+    --blue: #5B8DEF;
+    --violet: #B968FF;
+    --text: #EDEFF7;
+    --muted: #8992AD;
+    --line: rgba(140, 150, 190, 0.16);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+  ::selection{ background: var(--violet); color: #fff; }
+
+  a{ color: inherit; }
+
+  .eyebrow{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before{
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 8px var(--blue);
+    flex-shrink: 0;
+  }
+
+  h1, h2, h3{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- NAV ---------- */
+  nav{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 6vw;
+    backdrop-filter: blur(10px);
+    background: rgba(10,13,26,0.55);
+    border-bottom: 1px solid var(--line);
+  }
+  .logo{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo-node{
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    box-shadow: 0 0 12px var(--violet);
+  }
+  .nav-cta{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    padding: 9px 18px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    text-decoration: none;
+    transition: border-color .25s, background .25s;
+  }
+  .nav-cta:hover{ border-color: var(--blue); background: rgba(91,141,239,0.08); }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 6vw 80px;
+  }
+  #network-canvas{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.85;
+  }
+  .hero-content{
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+  }
+  .hero h1{
+    font-size: clamp(2.8rem, 7vw, 5.6rem);
+    line-height: 0.98;
+    margin: 22px 0 26px;
+  }
+  .hero h1 .grad{
+    background: linear-gradient(100deg, var(--blue), var(--violet));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p{
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.65;
+    margin-bottom: 40px;
+  }
+  .hero-actions{ display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .btn-primary{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.98rem;
+    padding: 15px 30px;
+    border-radius: 100px;
+    background: linear-gradient(100deg, var(--blue), var(--violet));
+    color: #0A0D1A;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform .25s, box-shadow .25s;
+    box-shadow: 0 0 0 rgba(185,104,255,0);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 8px 30px rgba(185,104,255,0.35); }
+  .btn-ghost{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 3px;
+    transition: color .25s, border-color .25s;
+  }
+  .btn-ghost:hover{ color: var(--text); border-color: var(--text); }
+
+  .hero-stats{
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 48px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+  }
+  .stat .num{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+  }
+  .stat .lbl{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{
+    position: relative;
+    padding: 110px 6vw;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-head{
+    max-width: 640px;
+    margin-bottom: 64px;
+  }
+  .section-head h2{
+    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    margin-top: 16px;
+  }
+  .section-head p{
+    color: var(--muted);
+    margin-top: 16px;
+    line-height: 1.6;
+    font-size: 1.02rem;
+  }
+
+  /* connector divider - literal nexus points */
+  .connector{
+    display: flex;
+    align-items: center;
+    gap: 0;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 6vw;
+  }
+  .connector .node{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 10px var(--blue);
+    flex-shrink: 0;
+  }
+  .connector .wire{
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue), var(--line) 30%, var(--line) 70%, var(--violet));
+  }
+  .connector .node.end{ background: var(--violet); box-shadow: 0 0 10px var(--violet); }
+
+  /* ---------- GRID CARDS ---------- */
+  .grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .card{
+    background: var(--bg-panel);
+    padding: 40px;
+    position: relative;
+    transition: background .3s;
+  }
+  .card:hover{ background: var(--bg-panel-2); }
+  .card .tag{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--blue);
+    letter-spacing: 0.08em;
+  }
+  .card h3{
+    font-size: 1.35rem;
+    margin: 14px 0 12px;
+  }
+  .card p{
+    color: var(--muted);
+    line-height: 1.6;
+    font-size: 0.96rem;
+  }
+
+  /* ---------- TEAM ---------- */
+  .team-row{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .team-node{
+    text-align: center;
+    padding: 30px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg-panel);
+  }
+  .team-node .ring{
+    width: 46px; height: 46px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    border: 2px solid var(--violet);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+  }
+  .team-node .role{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  /* ---------- WHY / CHECKLIST ---------- */
+  .why-list{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 40px;
+    margin-top: 8px;
+  }
+  .why-item{
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 1rem;
+  }
+  .why-item .mark{ color: var(--violet); font-family:'JetBrains Mono',monospace; font-size:0.85rem; }
+
+  /* ---------- RULES ---------- */
+  .rules-strip{
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .pill{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid var(--line);
+    color: var(--text);
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-section{
+    text-align: center;
+    padding: 140px 6vw 160px;
+    position: relative;
+  }
+  .cta-section h2{
+    font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+    max-width: 780px;
+    margin: 20px auto 26px;
+    line-height: 1.05;
+  }
+  .cta-section p{
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 40px;
+  }
+  .cta-eyebrow{ justify-content: center; }
+
+  footer{
+    padding: 40px 6vw;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 760px){
+    .grid{ grid-template-columns: 1fr; }
+    .team-row{ grid-template-columns: repeat(2,1fr); }
+    .why-list{ grid-template-columns: 1fr; }
+    .hero{ padding-top: 110px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+  }
+
+  :focus-visible{
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-node"></span>NEXUS</div>
+  <a class="nav-cta" href="https://discord.gg/b8Gtw9DFJ" target="_blank" rel="noopener">Entrar no servidor</a>
+</nav>
+
+<section class="hero">
+  <canvas id="network-canvas"></canvas>
+  <div class="hero-content">
+    <div class="eyebrow">Comunidade ativa · Discord</div>
+    <h1>Cada pessoa é<br>um <span class="grad">nó</span>. Toda<br>conversa, uma <span class="grad">conexão</span>.</h1>
+    <p>A NEXUS reúne quem quer jogar, conversar e fazer parte de algo em movimento — em canais de texto, voz e eventos organizados por uma equipe presente.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://discord.gg/b8Gtw9DFJ" target="_blank" rel="noopener">Entrar agora</a>
+      <a class="btn-ghost" href="#sobre">Ver como funciona ↓</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="num">24/7</div><div class="lbl">Canais ativos</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lbl">Moderação presente</div></div>
+    <div class="stat"><div class="num">∞</div><div class="lbl">Novas amizades</div></div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section id="sobre">
+  <div class="section-head">
+    <div class="eyebrow">Gaming</div>
+    <h2>Jogue com gente que aparece.</h2>
+    <p>Encontre parceiros de time, monte squads e acompanhe eventos e competições sem precisar procurar em outro lugar.</p>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="tag">01 — PARCEIROS</div>
+      <h3>Encontre parceiros para jogar</h3>
+      <p>Chame gente pros canais de voz gamer e monte sua equipe pra próxima partida.</p>
+    </div>
+    <div class="card">
+      <div class="tag">02 — TROCA</div>
+      <h3>Compartilhe experiências</h3>
+      <p>Fale sobre os jogos que está jogando, peça dicas e descubra o que a galera anda jogando.</p>
+    </div>
+    <div class="card">
+      <div class="tag">03 — COMPETIÇÃO</div>
+      <h3>Participe de eventos</h3>
+      <p>Torneios e dinâmicas organizados pela equipe, com anúncio prévio nos canais certos.</p>
+    </div>
+    <div class="card">
+      <div class="tag">04 — DESCOBERTA</div>
+      <h3>Conheça novos jogadores</h3>
+      <p>Uma comunidade gamer cresce quando as pessoas se encontram — é isso que a NEXUS facilita.</p>
+    </div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Amizades &amp; interação</div>
+    <h2>Não é só um servidor. É um ponto de encontro.</h2>
+    <p>Bate-papo, canais de voz e uma comunidade que valoriza quem participa.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="tag">TEXTO</div><h3>Bate-papo</h3><p>Canais abertos pra conversar sobre o que quiser, todo dia.</p></div>
+    <div class="card"><div class="tag">VOZ</div><h3>Canais de voz</h3><p>Entre, chame a galera e fique à vontade.</p></div>
+    <div class="card"><div class="tag">VÍNCULO</div><h3>Novas amizades</h3><p>Gente nova toda semana, prontas pra trocar ideia.</p></div>
+    <div class="card"><div class="tag">CULTURA</div><h3>Diversão com a comunidade</h3><p>Dinâmicas e momentos criados junto com quem participa.</p></div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Equipe NEXUS</div>
+    <h2>Uma equipe presente, não só um cargo na lista.</h2>
+    <p>Cada área cuida de uma parte da comunidade pra tudo funcionar.</p>
+  </div>
+  <div class="team-row">
+    <div class="team-node"><div class="ring">👑</div><div class="role">Direção</div></div>
+    <div class="team-node"><div class="ring">🛡️</div><div class="role">Administração</div></div>
+    <div class="team-node"><div class="ring">🔨</div><div class="role">Moderação</div></div>
+    <div class="team-node"><div class="ring">🎧</div><div class="role">Suporte</div></div>
+    <div class="team-node"><div class="ring">💻</div><div class="role">Desenvolvimento</div></div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Eventos &amp; novidades</div>
+    <h2>Fique de olho pra não ficar de fora.</h2>
+    <p>Eventos, dinâmicas e anúncios acontecem direto — ativar notificações é a forma mais fácil de acompanhar.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="tag">EVENTOS</div><h3>Competições e atividades</h3><p>Anunciadas com antecedência nos canais próprios.</p></div>
+    <div class="card"><div class="tag">PARCERIAS</div><h3>Rede de comunidades parceiras</h3><p>Tem uma comunidade e quer parceria? Fale com a equipe responsável.</p></div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Respeito em primeiro lugar</div>
+    <h2>O que sustenta a NEXUS.</h2>
+  </div>
+  <div class="rules-strip">
+    <div class="pill">🤝 Respeito</div>
+    <div class="pill">💬 Boa convivência</div>
+    <div class="pill">🛡️ Segurança</div>
+    <div class="pill">⚖️ Organização</div>
+    <div class="pill">❤️ Amizade</div>
+  </div>
+</section>
+
+<div class="connector"><div class="node"></div><div class="wire"></div><div class="node end"></div></div>
+
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Por que entrar</div>
+    <h2>Tudo o que você encontra dentro.</h2>
+  </div>
+  <div class="why-list">
+    <div class="why-item"><span class="mark">→</span>Comunidade ativa</div>
+    <div class="why-item"><span class="mark">→</span>Ambiente organizado</div>
+    <div class="why-item"><span class="mark">→</span>Canais de texto e voz</div>
+    <div class="why-item"><span class="mark">→</span>Área gamer</div>
+    <div class="why-item"><span class="mark">→</span>Eventos frequentes</div>
+    <div class="why-item"><span class="mark">→</span>Novas amizades</div>
+    <div class="why-item"><span class="mark">→</span>Comunidades parceiras</div>
+    <div class="why-item"><span class="mark">→</span>Equipe de suporte</div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="eyebrow cta-eyebrow">A história está apenas começando</div>
+  <h2>Cada novo membro ajuda a construir a NEXUS.</h2>
+  <p>Você não entra como mais um número. Entra como parte da comunidade.</p>
+  <a class="btn-primary" href="https://discord.gg/b8Gtw9DFJ" target="_blank" rel="noopener">Entrar no Discord →</a>
+</section>
+
+<footer>
+  <div>NEXUS · Conectando pessoas. Criando amizades. Construindo uma comunidade.</div>
+  <div>discord.gg/b8Gtw9DFJ</div>
+</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('network-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, nodes;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    w = canvas.width = canvas.offsetWidth * devicePixelRatio;
+    h = canvas.height = canvas.offsetHeight * devicePixelRatio;
+  }
+
+  function initNodes(){
+    const count = Math.max(28, Math.floor((canvas.offsetWidth * canvas.offsetHeight) / 32000));
+    nodes = Array.from({length: count}, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
+      vy: (Math.random() - 0.5) * 0.25 * devicePixelRatio,
+      r: (Math.random() * 1.4 + 0.8) * devicePixelRatio
+    }));
+  }
+
+  function step(){
+    ctx.clearRect(0, 0, w, h);
+    const maxDist = 150 * devicePixelRatio;
+
+    for (const n of nodes){
+      if(!reduceMotion){
+        n.x += n.vx; n.y += n.vy;
+        if (n.x < 0 || n.x > w) n.vx *= -1;
+        if (n.y < 0 || n.y > h) n.vy *= -1;
+      }
+    }
+
+    for (let i = 0; i < nodes.length; i++){
+      for (let j = i + 1; j < nodes.length; j++){
+        const a = nodes[i], b = nodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < maxDist){
+          const alpha = (1 - dist / maxDist) * 0.35;
+          ctx.strokeStyle = `rgba(120,140,220,${alpha})`;
+          ctx.lineWidth = devicePixelRatio;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    for (const n of nodes){
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(185,150,255,0.85)';
+      ctx.fill();
+    }
+
+    if (!reduceMotion) requestAnimationFrame(step);
+  }
+
+  function start(){
+    resize();
+    initNodes();
+    step();
+  }
+
+  window.addEventListener('resize', () => { resize(); initNodes(); if(reduceMotion) step(); });
+  start();
+})();
+</script>
+
+</body>
+</html>
